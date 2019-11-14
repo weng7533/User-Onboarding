@@ -1,42 +1,95 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import { withFormik, Form, Field } from "formik";
 import * as Yup from "yup";
 
-function LoginForm({ values, errors, touched, isSubmitting }) {
+function LoginForm({ values, errors, touched, isSubmitting, status }) {
+    const [users, setUsers] = useState([
+        {
+            name: 'William',
+            email: 'W@gmail.com',
+            password: '12345'
+        },
+        {
+            name: 'Bill',
+            email: 'MrY@gmail.com',
+            password: '12345'
+        },
+        {
+            name: 'William',
+            email: 'MrTom@gmail.com',
+            password: '12345'
+        },
+        {
+            name: 'William',
+            email: 'A@gmail.com',
+            password: '12345'
+        }
+    ])
+    useEffect(() => {
+        if (status) { setUsers([...users, status]); }
+    }, [status])
+
+
     return (
-        < Form>
-            <div>
-                {touched.name && errors.name && <p>{errors.name}</p>}
-                <Field type="name" name="name" placeholder="Name" />
+
+        <div>
+            <Form>
+                <div>
+                    {touched.name && errors.name && <p>{errors.name}</p>}
+                    <Field type="name" name="name" placeholder="Name" />
+                </div>
+                <div>
+                    {touched.email && errors.email && <p>{errors.email}</p>}
+                    <Field type="email" name="email" placeholder="Email" />
+                </div>
+                <div>
+                    {touched.password && errors.password && <p>{errors.password}</p>}
+                    <Field type="password" name="password" placeholder="Password" />
+                </div>
+                <label>
+                    {touched.TermsofService && errors.TermsofService && <p>{errors.TermsofService}</p>}
+                    <Field type="checkbox" name="TermsofService" checked={values.TermsofService} />
+                    Terms of Service
+                </label>
+                <div>
+                    <button type="submit" disabled={isSubmitting}>Submit</button>
+                </div>
+                {console.log(users)}
+            </Form>
+
+            <div >
+
+                {
+                    users.map((e, index) =>
+                        <div className='cards' key={index}>
+
+                            <h3>name: {e.name}</h3>
+                            <h3>email: {e.email}</h3>
+                            <h3>password: {e.password}</h3>
+                        </div>
+                    )
+                }
+
             </div>
-            <div>
-                {touched.email && errors.email && <p>{errors.email}</p>}
-                <Field type="email" name="email" placeholder="Email" />
-            </div>
-            <div>
-                {touched.password && errors.password && <p>{errors.password}</p>}
-                <Field type="password" name="password" placeholder="Password" />
-            </div>
-            <label>
-                <Field type="checkbox" name="Terms of Service" checked={values.tos} />
-                Terms of Service
-            </label>
-            <div>
-                <button disabled={isSubmitting}>Submit</button>
-            </div>
-        </Form>
+
+
+        </div>
+
+
+
     );
 }
 
 
 
 const FormikLoginForm = withFormik({
-    mapPropsToValues({ email, password, tos, meal }) {
+    mapPropsToValues({ name, email, password, TermsofService }) {
         return {
             email: email || "",
+            name: name || "",
             password: password || "",
-            tos: tos || false,
+            TermsofService: TermsofService || false,
 
         };
     },
@@ -46,16 +99,24 @@ const FormikLoginForm = withFormik({
             .required("Email is required"),
         password: Yup.string()
             .min(16, "Password must be 16 characters or longer")
-            .required("Password is required")
+            .required("Password is required"),
+
+        TermsofService: Yup
+            .bool()
+            .oneOf([true], 'Field must be checked')
     }),
-    handleSubmit(values, { resetForm, setErrors, setSubmitting }) {
+    handleSubmit(values, { resetForm, setErrors, setSubmitting, setStatus }) {
+
+
+
         if (values.email === "alreadytaken@atb.dev") {
             setErrors({ email: "That email is already taken" });
         } else {
             axios
-                .post("https://yourdatabaseurlgoeshere.com", values)
+                .post(" https://reqres.in/api/users", values)
                 .then(res => {
                     console.log(res); // Data was created successfully and logs to console
+                    setStatus(res.data);
                     resetForm();
                     setSubmitting(false);
                 })
