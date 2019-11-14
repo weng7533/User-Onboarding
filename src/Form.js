@@ -34,18 +34,18 @@ function LoginForm({ values, errors, touched, isSubmitting, status }) {
     return (
 
         <div>
-            <Form>
-                <div>
+            <Form className='from'>
+                <div >
                     {touched.name && errors.name && <p>{errors.name}</p>}
-                    <Field type="name" name="name" placeholder="Name" />
+                    <Field className='enter' type="name" name="name" placeholder="Name" />
                 </div>
                 <div>
                     {touched.email && errors.email && <p>{errors.email}</p>}
-                    <Field type="email" name="email" placeholder="Email" />
+                    <Field className='enter' type="email" name="email" placeholder="Email" />
                 </div>
                 <div>
                     {touched.password && errors.password && <p>{errors.password}</p>}
-                    <Field type="password" name="password" placeholder="Password" />
+                    <Field className='enter' type="password" name="password" placeholder="Password" />
                 </div>
                 <label>
                     {touched.TermsofService && errors.TermsofService && <p>{errors.TermsofService}</p>}
@@ -53,7 +53,7 @@ function LoginForm({ values, errors, touched, isSubmitting, status }) {
                     Terms of Service
                 </label>
                 <div>
-                    <button type="submit" disabled={isSubmitting}>Submit</button>
+                    <button className='button' type="submit" disabled={isSubmitting}>Submit</button>
                 </div>
                 {console.log(users)}
             </Form>
@@ -66,7 +66,7 @@ function LoginForm({ values, errors, touched, isSubmitting, status }) {
 
                             <h3>name: {e.name}</h3>
                             <h3>email: {e.email}</h3>
-                            <h3>password: {e.password}</h3>
+                            <h3>password:{e.password}</h3>
                         </div>
                     )
                 }
